@@ -4,6 +4,7 @@ import { api } from "@/convex/_generated/api";
 import { Preloaded, usePreloadedQuery } from "convex/react";
 import { User } from "lucide-react";
 import Image from "next/image";
+import Link from "next/link";
 import Links from "./Links";
 
 interface PublicPageContentProps {
@@ -121,13 +122,13 @@ function PublicPageContent({
                             <div className="bg-white/80 backdrop-blur-sm rounded-xl p-4 sm:p-6 shadow-lg border border-gray-200">
                                 <p className="text-xs sm:text-sm text-gray-600 break-words">
                                     Create your own professional link-in-bio with{" "}
-                                    <a
+                                    <Link
                                         href="/"
                                         className="font-semibold hover:text-[#253900] transition-colors duration-200"
                                         style={{ color: accentColor }}
                                     >
                                         Linkify
-                                    </a>
+                                    </Link>
                                 </p>
                                 <div className="mt-3 text-xs text-gray-500">
                                     <span className="whitespace-nowrap">Powered by modern web technology</span>

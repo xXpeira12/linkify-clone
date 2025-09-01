@@ -32,7 +32,7 @@ function Links({
                     <ArrowUpRight className="w-16 h-16 mx-auto" />
                 </div>
                 <p className="text-gray-600 text-xl font-semibold">No links found</p>
-                <p className="text-gray-400 text-sm mt-2">Links will appear here when they're added</p>
+                <p className="text-gray-400 text-sm mt-2">Links will appear here when they&apos;re added</p>
             </div>
         );
     }

@@ -37,7 +37,7 @@ function ManageLinks({ preloadedLinks }: {
             setItems((items) => {
                 const oldIndex = items.indexOf(active.id as Id<"links">);
                 const newIndex = items.indexOf(over?.id as Id<"links">);
-            
+
                 const newItems = arrayMove(items, oldIndex, newIndex);
                 updateLinkOrder({ linkIds: newItems });
                 return newItems;
@@ -45,37 +45,62 @@ function ManageLinks({ preloadedLinks }: {
         }
     }
 
-    return ( 
-        <>
-            <DndContext
-                sensors={sensors}
-                collisionDetection={closestCenter}
-                onDragEnd={handleDragEnd}
-            >
-                <SortableContext items={items} strategy={verticalListSortingStrategy}>
-                    <div className="space-y-2">
-                        {items.map((id) => {
-                            const link = linkMap[id];
-                            return <SortableItem key={id} id={id} link={link}/>;
-                        })}
+    return (
+        <div className="space-y-6">
+            {links.length === 0 ? (
+                <div className="text-center py-12">
+                    <div className="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <Plus className="w-8 h-8 text-gray-400" />
                     </div>
-                </SortableContext>
-            </DndContext>
+                    <h3 className="text-lg font-semibold text-gray-900 mb-2">No links yet</h3>
+                    <p className="text-gray-600 mb-6">
+                        Start building your link-in-bio page by adding your first link.
+                    </p>
+                    <Button
+                        asChild
+                        className="bg-[#08CB00] hover:bg-[#253900] text-white rounded-xl shadow-md hover:shadow-lg transition-all duration-200"
+                    >
+                        <Link href="/dashboard/new-link" className="flex items-center gap-2">
+                            <Plus className="w-4 h-4" />
+                            Add Your First Link
+                        </Link>
+                    </Button>
+                </div>
+            ) : (
+                <>
+                    <DndContext
+                        sensors={sensors}
+                        collisionDetection={closestCenter}
+                        onDragEnd={handleDragEnd}
+                    >
+                        <SortableContext items={items} strategy={verticalListSortingStrategy}>
+                            <div className="space-y-3">
+                                {items.map((id) => {
+                                    const link = linkMap[id];
+                                    return <SortableItem key={id} id={id} link={link} />;
+                                })}
+                            </div>
+                        </SortableContext>
+                    </DndContext>
 
-            <Button
-                variant="outline"
-                className="w-full mt-4"
-                asChild
-            >
-                <Link
-                    href="/dashboard/new-link"
-                    className="flex items-center justify-center gap-2"
-                >
-                    <Plus className="w-4 h-4"/>
-                    Add Link
-                </Link>
-            </Button>
-        </>
+                    <div className="pt-4 border-t border-gray-200">
+                        <Button
+                            variant="outline"
+                            className="w-full border-[#08CB00] text-[#08CB00] hover:bg-[#08CB00] hover:text-white py-3 rounded-xl transition-all duration-200 shadow-sm hover:shadow-md"
+                            asChild
+                        >
+                            <Link
+                                href="/dashboard/new-link"
+                                className="flex items-center justify-center gap-2"
+                            >
+                                <Plus className="w-4 h-4" />
+                                Add Another Link
+                            </Link>
+                        </Button>
+                    </div>
+                </>
+            )}
+        </div>
     );
 }
 

@@ -26,7 +26,7 @@ const formSchema = z.object({
 function UsernameForm() {
     const { user } = useUser();
     const [debouncedUsername, setDebouncedUsername] = useState("");
-    
+
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
         defaultValues: {
@@ -39,10 +39,10 @@ function UsernameForm() {
         const timer = setTimeout(() => {
             setDebouncedUsername(watchUsername);
         }, 500);
-        
+
         return () => clearTimeout(timer);
     }, [watchUsername]);
-    
+
     const currentSlug = useQuery(
         api.lib.usernames.getUserSlug,
         user?.id ? { userId: user.id } : "skip",
@@ -50,7 +50,7 @@ function UsernameForm() {
 
     const availabilityCheck = useQuery(
         api.lib.usernames.checkUsernameAvailability,
-        debouncedUsername.length >=3 ? { username: debouncedUsername } : "skip",
+        debouncedUsername.length >= 3 ? { username: debouncedUsername } : "skip",
     );
 
     const setUsername = useMutation(api.lib.usernames.setUsername);
@@ -69,7 +69,7 @@ function UsernameForm() {
 
     async function onSubmit(values: z.infer<typeof formSchema>) {
         if (!user?.id) return;
-    
+
         try {
             const result = await setUsername({ username: values.username });
             if (result.success) {
@@ -88,36 +88,39 @@ function UsernameForm() {
         watchUsername.length < 3 ||              // too short
         status === "checking" ||                 // still checking
         status === "unavailable" ||              // already taken
-        status === "current";  
+        status === "current";
 
     return (
-        <div>
-            <div>
-                <h3>
+        <div className="space-y-6">
+            <div className="space-y-2">
+                <h3 className="text-lg font-semibold text-gray-900">
                     Customize Your Link
                 </h3>
-                <p>
+                <p className="text-gray-600">
                     Choose a custom username for your link-in-bio page.
                 </p>
             </div>
 
             {/* Current username status */}
             {hasCustomUsername && (
-                <div className="mb-4 p-4 bg-green-50 border border-green-200 rounded">
-                    <div className="flex justify-between items-center">
-                        <div className="flex items-center space-x-2">
-                            <User className="w-4 h-4 text-blue-500" />
+                <div className="mb-6 p-4 bg-green-50 border border-green-200 rounded-lg">
+                    <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-3">
+                        <div className="flex items-center space-x-2 min-w-0">
+                            <User className="w-4 h-4 text-green-600 flex-shrink-0" />
                             <span className="text-sm font-medium text-green-900">Current Username</span>
                         </div>
-                        <div className="flex items-center space-x-2">
-                            <span className="font-mono text-green-800 bg-white px-2 py-1 rounded text-sm">{currentSlug}</span>
+                        <div className="flex items-center space-x-2 min-w-0">
+                            <span className="font-mono text-green-800 bg-white px-3 py-1 rounded text-sm truncate max-w-[200px] sm:max-w-none">
+                                {currentSlug}
+                            </span>
                             <Link
                                 href={`/u/${currentSlug}`}
                                 target="_blank"
                                 rel="noopener noreferrer"
-                                className="text-green-600"
+                                className="text-green-600 hover:text-green-700 flex-shrink-0"
+                                title="Open your page"
                             >
-                                <ExternalLink className="w-4 h-4"/>
+                                <ExternalLink className="w-4 h-4" />
                             </Link>
                         </div>
                     </div>
@@ -125,29 +128,31 @@ function UsernameForm() {
             )}
 
             {/* URL preview */}
-            <div className="mb-4 p-4 bg-gray-50 border border-gray-200 rounded">
-                <div className="flex items-center justify-between">
-                    <div></div>
-                    <span>Your Link Preview</span>
+            <div className="mb-6 p-4 bg-gray-50 border border-gray-200 rounded-lg">
+                <div className="flex items-center justify-between mb-3">
+                    <span className="text-sm font-medium text-gray-700">Your Link Preview</span>
                 </div>
-                <div className="mt-2 flex items-center justify-between font-mono">
+                <div className="flex items-center justify-between gap-3 min-w-0">
                     <Link
                         href={`/u/${currentSlug}`}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="text-blue-600 hover:underline"
+                        className="text-blue-600 hover:underline font-mono text-sm truncate min-w-0 flex-1"
+                        title={`${getBaseUrl()}/u/${currentSlug}`}
                     >
-                        {getBaseUrl()}/u/{currentSlug}
+                        <span className="hidden sm:inline">{getBaseUrl()}/u/</span>
+                        <span className="sm:hidden">linkify.com/u/</span>
+                        <span className="font-semibold">{currentSlug}</span>
                     </Link>
                     <button
                         onClick={() => {
                             navigator.clipboard.writeText(`${getBaseUrl()}/u/${currentSlug}`);
-                            toast.success("Copied to clipboard");
+                            toast.success("Copied to clipboard!");
                         }}
-                        className="p-1 rounded hover:bg-gray-100"
+                        className="p-2 rounded-md hover:bg-gray-200 transition-colors flex-shrink-0"
                         title="Copy to clipboard"
                     >
-                        <Copy className="w-4 h-4"/>
+                        <Copy className="w-4 h-4 text-gray-600" />
                     </button>
                 </div>
             </div>
@@ -166,57 +171,50 @@ function UsernameForm() {
                                 <FormLabel>Username</FormLabel>
                                 <FormControl>
                                     <div className="relative">
-                                        <Input 
+                                        <Input
                                             placeholder="enter-your-username"
                                             {...field}
                                             className="pr-10"
                                         />
                                         <div className="absolute right-3 top-1/2 transform -translate-y-1/2">
                                             {status === "checking" && (
-                                                <Loader2 className="w-4 h-4 text-gray-500"/>
+                                                <Loader2 className="w-4 h-4 text-gray-500" />
                                             )}
                                             {status === "available" && (
-                                                <CheckCircle className="w-4 h-4 text-green-500"/>
+                                                <CheckCircle className="w-4 h-4 text-green-500" />
                                             )}
                                             {status === "current" && (
-                                                <User className="w-4 h-4 text-blue-500"/>
+                                                <User className="w-4 h-4 text-blue-500" />
                                             )}
                                             {status === "unavailable" && (
-                                                <AlertCircle className="w-4 h-4 text-red-500"/>
+                                                <AlertCircle className="w-4 h-4 text-red-500" />
                                             )}
                                         </div>
                                     </div>
                                 </FormControl>
-                                <FormDescription>
-                                    Your username will be publicly visible and can be changed at any time.
+                                <FormDescription className="text-gray-600">
+                                    {status === "available" && "✅ Username is available!"}
+                                    {status === "unavailable" && "❌ Username is already taken"}
+                                    {status === "current" && "💡 This is your current username"}
+                                    {status === "checking" && "⏳ Checking availability..."}
+                                    {!status && "Use letters, numbers, underscores, and hyphens only"}
                                 </FormDescription>
-                                {status === "available" && (
-                                    <p className="text-sm text-green-600">Username is available!</p>
-                                )}
-                                {status === "current" && (
-                                    <p className="text-sm text-blue-600">This is your current username</p>
-                                )}
-                                {status === "unavailable" && (
-                                    <p className="text-sm text-red-600">
-                                        {availabilityCheck?.error || "Username is already taken"}
-                                    </p>
-                                )}
-                                <FormMessage/>
+                                <FormMessage />
                             </FormItem>
                         )}
                     />
                     <Button
                         type="submit"
-                        className="w-full disabled:opacity-50"
+                        className="w-full bg-[#08CB00] hover:bg-[#253900] text-white py-3 rounded-xl font-medium transition-all duration-200 shadow-md hover:shadow-lg"
                         disabled={isSubmitDisabled}
                     >
                         {form.formState.isSubmitting ? (
-                            <>
-                                <Loader2 className="w-4 h-4 mr-2 animate-spin"/>
-                                Updating...
-                            </>
+                            <div className="flex items-center gap-2">
+                                <Loader2 className="w-4 h-4 animate-spin" />
+                                Updating Username...
+                            </div>
                         ) : (
-                            "Update Username"
+                            hasCustomUsername ? "Update Username" : "Claim Username"
                         )}
                     </Button>
                 </form>

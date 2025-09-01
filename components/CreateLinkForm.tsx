@@ -54,51 +54,85 @@ function CreateLinkForm() {
     }
 
     return (
-        <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-                <FormField
-                    control={form.control}
-                    name="title"
-                    render={({ field }) => (
-                        <FormItem>
-                            <FormLabel>Link Title</FormLabel>
-                            <FormControl>
-                                <Input placeholder="My Link Title" {...field}/>
-                            </FormControl>
-                            <FormDescription>
-                                This is the title of your link. It should be descriptive and concise.
-                            </FormDescription>
-                            <FormMessage/>
-                        </FormItem>
+        <div className="space-y-6">
+            <Form {...form}>
+                <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+                    <FormField
+                        control={form.control}
+                        name="title"
+                        render={({ field }) => (
+                            <FormItem>
+                                <FormLabel className="text-gray-900 font-medium">Link Title</FormLabel>
+                                <FormControl>
+                                    <Input
+                                        placeholder="My Awesome Link"
+                                        className="border-gray-300 focus:border-primary focus:ring-primary"
+                                        {...field}
+                                    />
+                                </FormControl>
+                                <FormDescription className="text-gray-600">
+                                    Give your link a descriptive and memorable title that tells visitors what to expect.
+                                </FormDescription>
+                                <FormMessage />
+                            </FormItem>
+                        )}
+                    />
+
+                    <FormField
+                        control={form.control}
+                        name="url"
+                        render={({ field }) => (
+                            <FormItem>
+                                <FormLabel className="text-gray-900 font-medium">Destination URL</FormLabel>
+                                <FormControl>
+                                    <Input
+                                        placeholder="https://example.com"
+                                        className="border-gray-300 focus:border-primary focus:ring-primary"
+                                        {...field}
+                                    />
+                                </FormControl>
+                                <FormDescription className="text-gray-600">
+                                    Enter the full URL where you want to redirect your visitors.
+                                </FormDescription>
+                                <FormMessage />
+                            </FormItem>
+                        )}
+                    />
+
+                    {error && (
+                        <div className="text-red-700 text-sm bg-red-50 border border-red-200 p-4 rounded-xl flex items-start gap-3">
+                            <svg className="w-5 h-5 text-red-500 mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                                <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
+                            </svg>
+                            <div>
+                                <h4 className="font-medium">Error</h4>
+                                <p>{error}</p>
+                            </div>
+                        </div>
                     )}
-                />
 
-                <FormField
-                    control={form.control}
-                    name="url"
-                    render={({ field }) => (
-                        <FormItem>
-                            <FormLabel>Link URL</FormLabel>
-                            <FormControl>
-                                <Input placeholder="https://example.com" {...field}/>
-                            </FormControl>
-                            <FormDescription>
-                                This is the URL of your link. It should be a valid URL.
-                            </FormDescription>
-                            <FormMessage/>
-                        </FormItem>
-                    )}
-                />
-
-                {error && (
-                    <div className="text-red-600 text-sm bg-red-50 p-3 rounded-md">{error}</div>
-                )}
-
-                <Button type="submit" disabled={isSubmitting} className="w-full">
-                    {isSubmitting ? "Creating..." : "Create Link"}
-                </Button>
-            </form>
-        </Form>
+                    <div className="pt-4">
+                        <Button
+                            type="submit"
+                            disabled={isSubmitting}
+                            className="w-full bg-primary hover:bg-primary/90 text-white py-3 rounded-xl font-medium transition-colors"
+                        >
+                            {isSubmitting ? (
+                                <div className="flex items-center gap-2">
+                                    <svg className="w-4 h-4 animate-spin" viewBox="0 0 24 24">
+                                        <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none" />
+                                        <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
+                                    </svg>
+                                    Creating Link...
+                                </div>
+                            ) : (
+                                "Create Link"
+                            )}
+                        </Button>
+                    </div>
+                </form>
+            </Form>
+        </div>
     );
 }
 

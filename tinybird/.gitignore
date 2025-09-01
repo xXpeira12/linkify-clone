@@ -1,0 +1,14 @@
+# Tinybird configuration file with tokens and credentials
+.tinyb
+
+# Build artifacts
+.dist/
+.build/
+
+# Local development files
+.env.local
+*.local
+
+# Backup files
+*.backup
+*.bak
